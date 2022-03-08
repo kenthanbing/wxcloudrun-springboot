@@ -1,10 +1,11 @@
 package com.tencent.wxcloudrun.controller;
 
 import com.tencent.wxcloudrun.config.ApiResponse;
+import com.tencent.wxcloudrun.dto.FiveElementsRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
@@ -27,18 +28,18 @@ public class FiveElementsController {
     private static final String[] DIZHI = "子丑寅卯辰巳午未申酉戌亥".split("");
     private static final String[] DIZHI_MAP = "水土木木土火火土金金土水".split("");
 
-    @GetMapping(value = "/api/fiveele")
-    ApiResponse get(@RequestParam("birthWords") String birthWords) {
-        logger.info("/api/fiveele get request, birthwords: {}", birthWords);
-
-        String[] birthWordsArray = birthWords.split("");
+    @PostMapping(value = "/api/fiveele")
+    ApiResponse fiveElements(@RequestBody FiveElementsRequest request) {
+        String birthWords = request.getBirthWords();
         // 验证非法输入
+        String[] birthWordsArray = birthWords.split("");
         String eightWords = Arrays.toString(TIANGAN) + Arrays.toString(DIZHI) ;
         for (String birthWord : birthWordsArray) {
-            if (!eightWords.contains(birthWord)) {
+            if (birthWordsArray.length != 8 || !eightWords.contains(birthWord)) {
                 return ApiResponse.ok("请输入正确的生辰八字");
             }
         }
+        logger.info("/api/fiveele get request, birthwords: {}", birthWords);
         // 天干地支与五行的映射，如 {"甲":"木"}
         HashMap<String, String> tianganMap = new HashMap<>();
         HashMap<String, String> dizhiMap = new HashMap<>();
