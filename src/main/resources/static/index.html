@@ -102,6 +102,16 @@
           >提交</a>
         </div>
 
+        <p class="count-text">测测五行缺失（请输入生辰八字）</p>
+        <div style="display: flex; justify-content: center; margin-bottom: 80px">
+          <input type="text" id="FIVE_ELEMENTS" class="guess-input">
+          <a
+                  class="btn btn-outline-success btn-lg count-button"
+                  style="background: rgba(0,0,0,0.03); color: #07abc1; border: 0;"
+                  onclick="fiveele()"
+          >提交</a>
+        </div>
+
         <small
           class="text-black-50"
           style="display: flex; justify-content: center; margin-bottom: 16px"
@@ -157,7 +167,6 @@
         }
       });
     }
-
     function guess() {
       var num = $('#GUESS_NUM').val();
 
@@ -173,7 +182,22 @@
           alert(res.data);
         }
       });
+    }
+    function fiveele() {
+      const birthWords = $('#FIVE_ELEMENTS').val();
 
+      $.ajax("/api/fiveele", {
+        method: "GET",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify({
+          val: birthWords,
+        }),
+      }).done(function (res) {
+        if (res && res.data !== undefined) {
+          alert(res.data);
+        }
+      });
     }
 
   </script>
